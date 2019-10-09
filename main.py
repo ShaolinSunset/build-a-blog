@@ -5,9 +5,6 @@ app = Flask(__name__)
 app.config['DEBUG'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://build-a-blog:buildablog@localhost:8889/build-a-blog'
 app.config['SQLALCHEMY_ECHO'] = True
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-
 db = SQLAlchemy(app)
 
 class Blog(db.Model):
@@ -18,6 +15,10 @@ class Blog(db.Model):
     def __init__(self, title, body):
         self.title = title
         self.body = body
+
+@app.route('/')
+def index():
+    return render_template('blog.html')
 
 @app.route('/newpost')
 def display():
@@ -49,8 +50,7 @@ def validate():
             return redirect('/blogpost/' + str(new_blog.id))
 
 @app.route('/blog')
-def index():
-
+def homepage():
     blogs = Blog.query.all()
     return render_template('blog.html', blogs=blogs)
 
